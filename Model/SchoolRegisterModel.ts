@@ -7,7 +7,7 @@ interface SchoolRegister {
     logo: string;
     location: string;
     affliated: boolean;
-    foundingyear: number;
+    foundingyear: Date;
 }
 
 
@@ -17,28 +17,31 @@ const SchoolRegisterSchema: Schema = new Schema({
     schoolname: {
         type: String,
         required: true,
-        unique:true
+        unique:true,
+        trim: true,
     },
     schoolcode: {
         type: String,
         required: true,
-        unique: true
-
-    },
+        unique: true,
+        trim: true,
+    }, 
     logo: {
         type: String,
-        required: true
+        // required: true,
+        trim: true,
     },
     location: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
     },
     affliated: {
         type: Boolean,
         default: false
     },
     foundingyear: {
-        type: Number,
+        type: Date,
         required: true
     },
 });
