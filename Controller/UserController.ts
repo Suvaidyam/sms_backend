@@ -82,7 +82,7 @@ const login = async (req: any, res: any) => {
         res.status(400).json({ message: 'Something went wrong' });
     }
 };
-
+ 
 const logout = async (req: any, res: any) => {
     try {
         const { id } = req.body;
@@ -112,9 +112,9 @@ const seenuser = async (req: any, res: any) => {
         
         
         const filter = userRole ? { role: userRole } : {};
-        const Alluser = await User.find(filter);
+        const Alluser = await User.find(filter).populate("school",{schoolname:1});
 
-        console.log(filter );
+        console.log(Alluser);
 
         res.status(200).json({ user: Alluser });
     } catch (error) {
