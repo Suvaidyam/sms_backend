@@ -16,6 +16,8 @@ app.use(express.json());
 //   res.send('Hello, TypeScript and Express!');
 // });
 app.use("/api", router)
+app.use('/uploads', express.static('uploads'));
+
 
 app.listen(PORT, () => {
   console.log(`Server is ready ${PORT}`);

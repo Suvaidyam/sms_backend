@@ -5,32 +5,33 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 const SECRET_KEY = 'LMS'  
 const register = async (req: any, res: any) => {
-
     try {
-        const { username, email, password, role ,mobile ,school} = req.body;
-        console.log(req.body);
+        const { username, email, password, role, mobile, school } = req.body;
+        
 
-        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+        const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'Username or email already exists' });
         }
-        const hashedPassword = await bcrypt.hash(password, 10)
-        const user = new User({ username, email, password: hashedPassword, role , mobile , school})
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = new User({ username, email, password: hashedPassword, role, mobile, school });
         await user.save();
 
         return res.status(200).json({ message: 'User created successfully' });
     } catch (error) {
         console.log(error);
-        return res.status(400).json({ message: 'Server error' });
+        return res.status(500).json({ message: 'Server error' });
     }
 }
+
 
 const login = async (req: any, res: any) => {
     try {
         const { email, password } = req.body;
-        console.log(email, password)
+        // console.log(email, password)
 
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email }).populate("school",{schoolname:1});
         if (!user) {
             return res.status(404).json({ message: 'Incorrect Email' });
         }
@@ -54,7 +55,7 @@ const login = async (req: any, res: any) => {
             res.status(200).json({ message: 'User LogOut Successfully', newLoginRecord });
         }
        
-        const token = jwt.sign({
+        const token  = await jwt.sign({
             username: user.username,
             role: user.role,
             mobile: user.mobile,
@@ -77,7 +78,7 @@ const login = async (req: any, res: any) => {
             }
         });
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         res.status(400).json({ message: 'Something went wrong' });
     }
 };
@@ -85,8 +86,8 @@ const login = async (req: any, res: any) => {
 const logout = async (req: any, res: any) => {
     try {
         const { id } = req.body;
-        console.log(id)
-        console.log(req.body)// 
+        // console.log(id)
+        // console.log(req.body)// 
         const existingRecord = await UserTime.findOne({ userid: id });
 
         if (existingRecord) {
@@ -100,18 +101,27 @@ const logout = async (req: any, res: any) => {
             res.status(200).json({ message: 'User not found in UserTime records' });
         }
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         res.status(500).json({ message: 'Something went wrong' });
     }
 };
 
-const seenuser = async (req:any ,res:any)=>{
+const seenuser = async (req: any, res: any) => {
     try {
-        const Alluser = User.find({});
-        res.status(200).json({user:Alluser});
+        const userRole = req.query.role;
+        
+        
+        const filter = userRole ? { role: userRole } : {};
+        const Alluser = await User.find(filter);
+
+        console.log(filter );
+
+        res.status(200).json({ user: Alluser });
     } catch (error) {
-        res.status(500).json({MYerror:error})
+        res.status(500).json({ MYerror: error });
     }
-}
+};
+
+
 
 export default { register, login ,logout ,seenuser}

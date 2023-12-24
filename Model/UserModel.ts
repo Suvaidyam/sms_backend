@@ -14,7 +14,10 @@ interface IUser extends Document {
     password: string;
     role: UserRole;
     mobile: number;
-    school: string;
+    school:{
+        type: mongoose.Types.ObjectId,
+        ref:"SchoolRegister",
+    }; 
 }
 
 const userSchema = new Schema<IUser>({
@@ -31,7 +34,7 @@ const userSchema = new Schema<IUser>({
 
     password: { type: String,
     required: true 
-    },
+    }, 
 
     role: { type: String,
     enum: Object.values(UserRole),
@@ -43,7 +46,8 @@ const userSchema = new Schema<IUser>({
         unique: true 
     },
     school: {
-        type: String,
+        type: mongoose.Types.ObjectId,
+        ref:"SchoolRegister",
         required: true,
     }
 });

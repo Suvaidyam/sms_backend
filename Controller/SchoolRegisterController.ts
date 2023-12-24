@@ -5,35 +5,55 @@ import SchoolRegisterModel from '../Model/SchoolRegisterModel';
 // Created School 
 const createSchool = async (req: any, res: Response) => {
   try {
-    // console.log(req.body);
-    // console.log(req.file); // Assuming you are using form-data for the request
+    const { schoolname, schoolcode, location, affliated, foundingyear } = req.body;
 
-    const schools = new SchoolRegisterModel({
-      ...req.body,
-    });
+    // Assuming req.file contains the uploaded file information
+    const logo = req.file ? req.file.path : ''; // Use the appropriate property based on your file upload middleware
 
-    const saveSchool = await schools.save();
-    // console.log(saveSchool);
-    
-    return res.status(200).json({ message: "School created successfully", schools: saveSchool });
+    const schoolData = {
+      schoolname,
+      schoolcode,
+      logo,
+      location,
+      affliated,
+      foundingyear,
+    };
+
+    const school = new SchoolRegisterModel(schoolData);
+
+    const savedSchool = await school.save();
+
+    return res.status(200).json({ message: 'School created successfully', school: savedSchool });
   } catch (error) {
-    res.status(400).json({ error: 'Error creating school' });
-    console.log(error);
+    console.error(error);
+    return res.status(400).json({ error: 'Error creating school' });
   }
 };
-
+ 
 
 // GetAllSchool
 const getSchools = async (req: any, res: Response) => {
-  try {
-    const schools = await SchoolRegisterModel.find();
-    // console.log(schools);
+  try { 
+    const school = req.query.school;
+    const schools = await SchoolRegisterModel.find(school !== '' ? { schoolname: school } : {});
     return res.status(200).json({ schools });
   } catch (error) {
-    console.error(error);
+    console.error(error); // Log the error for debugging
     res.status(500).json({ error: 'Error fetching schools' });
   }
 };
+
+const getAllSchools = async (req: any, res: Response) => {
+  try {
+    const schools = await SchoolRegisterModel.find();
+    return res.status(200).json({ schools });
+  } catch (error) {
+    // console.error(error); // Log the error for debugging
+    res.status(500).json({ error: 'Error fetching schools' });
+  }
+};
+
+
 
 // Update School
 const updateSchool = async (req: any, res: Response) => {
@@ -53,7 +73,7 @@ const updateSchool = async (req: any, res: Response) => {
 
     return res.status(200).json({ message: 'School updated successfully', school: updatedSchool });
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     res.status(500).json({ error: 'Error updating school' });
   }
 };
@@ -70,9 +90,9 @@ const deleteSchool = async (req: any, res: Response) => {
 
     return res.status(200).json({ message: 'School deleted successfully', school: deletedSchool });
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     res.status(500).json({ error: 'Error deleting school' });
   }
 };
 
-export default { createSchool, getSchools, deleteSchool, updateSchool };
+export default { createSchool, getSchools, deleteSchool, updateSchool ,getAllSchools };

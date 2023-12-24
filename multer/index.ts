@@ -2,15 +2,17 @@ import multer from "multer";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      // Specify the directory where you want to store uploaded files
-      cb(null, './uploads');
+        // Specify the directory where you want to store uploaded files
+        cb(null, './uploads');
     },
     filename: function (req, file, cb) {
-        console.log(file)
-      // Specify how you want to name the uploaded files
-      cb(null, Date.now() + '-' + file.originalname);
+        // Encode special characters in the file name
+        const encodedFileName = encodeURIComponent(Date.now() + '-' + file.originalname);
+        cb(null, encodedFileName);
     },
-  });
-  
-  // Initialize Multer with the storage settings
-export default multer({ storage: storage })
+}); 
+
+// Initialize Multer with the storage settings
+const upload = multer({ storage: storage });
+
+export default upload;
