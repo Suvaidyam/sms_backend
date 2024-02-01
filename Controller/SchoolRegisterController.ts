@@ -25,24 +25,37 @@ const createSchool = async (req: any, res: Response) => {
 
     return res.status(200).json({ message: 'School created successfully', school: savedSchool });
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return res.status(400).json({ error: 'Error creating school' });
   }
 };
  
 
-// GetAllSchool
+
 const getSchools = async (req: any, res: Response) => {
   try { 
     const school = req.query.school;
-    const schools = await SchoolRegisterModel.find(school !== '' ? { schoolname: school } : {});
-    return res.status(200).json({ schools });
+    // console.log(school);
+    
+    if (school === 'director' ) {
+        const schools = await SchoolRegisterModel.find();
+        return res.status(200).json({ schools });
+    }
+    else {
+      const _id = school;
+      const schools = await SchoolRegisterModel.find({_id});
+      return res.status(200).json({ schools });
+    }
+    
+    
   } catch (error) {
-    console.error(error); // Log the error for debugging
+    // console.error(error); // Log the error for debugging
     res.status(500).json({ error: 'Error fetching schools' });
   }
 };
 
+
+// GetAllSchool 
 const getAllSchools = async (req: any, res: Response) => {
   try {
     const schools = await SchoolRegisterModel.find();

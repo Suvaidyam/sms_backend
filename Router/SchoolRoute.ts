@@ -1,6 +1,6 @@
-import express from 'express';
+import express from 'express'; 
 const router = express.Router();
-import upload from '../multer/index'
+import upload from '../multer/index'  
 import SchoolRegisterController from "../Controller/SchoolRegisterController";
 // const path = require('path');
 

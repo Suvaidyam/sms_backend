@@ -6,13 +6,15 @@ enum UserRole {
     Student = 'student',
     Principal = 'principal',
     Director = 'director',
-}
-                
+    SuperAdmin = 'superadmin'
+} 
+                    
 interface IUser extends Document {
     username: string;
     email: string;
     password: string;
     role: UserRole;
+    userClass:string; 
     mobile: number;
     school:{
         type: mongoose.Types.ObjectId,
@@ -39,6 +41,9 @@ const userSchema = new Schema<IUser>({
     enum: Object.values(UserRole),
     required: true },
 
+    userClass:{
+        type:String,
+    },
     mobile: {
         type:Number,
         required: true,
@@ -47,7 +52,7 @@ const userSchema = new Schema<IUser>({
     school: {
         type: mongoose.Types.ObjectId,
         ref:"SchoolRegister",
-        required: true,
+        // required: true,  
     }
 });
 

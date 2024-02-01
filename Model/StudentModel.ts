@@ -1,18 +1,21 @@
 import mongoose, { Schema } from "mongoose";
-import connection from '..//Database/connection'
+import connection from '..//Database/connection';
+
 interface Student {
     usertype: string,
     studentid:Number,
     studentname:string,
-    mobile:string,
-    email:string,
-    password:string,
     age:Number,
     gender:string,
-    dob: string,
+    dob: string, 
     address:string,
-    class:string,
+    school:string,
+    classname:string,
     image:string,
+    studetuserid:{
+        type:mongoose.Types.ObjectId,
+        ref:'User'
+    }
 }
 
 interface StudentModel extends Student, Document { }
@@ -33,38 +36,40 @@ const StudentSchema: Schema = new Schema({
         type: String,
         required: true
     },
-    mobile: {
-        type: String,
-    },
-    email: {
-        type: String,
-        required:true
-    },
-    password: {
-        type: String,
-        required: true
-    },
+
     age:{
         type:Number,
         required:true
     },
     gender:{
         type:String,
+        require:true
 
     },
     dob:{
         type:String,
+        require:true
     },
     address:{
         type:String,
-
+        require:true
     },
-    class:{
+    school:{
         type:String,
-
+        require:true
+    },
+    classname:{
+        type:String,
+        require:true
     },
     image:{
         type:String
+    },
+    studetuserid:{
+        type:mongoose.Types.ObjectId,
+        ref:'User',
+        require:true,
+        unique:true
     }
 });
 

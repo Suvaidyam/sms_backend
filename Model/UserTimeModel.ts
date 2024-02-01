@@ -8,6 +8,8 @@ interface IUSERTIME extends Document {
 const LoginLogoutSchema = new Schema({
     userid:{
         type: Types.ObjectId,
+        ref:"User",
+
     },
     logintime:{
         type:Date,
