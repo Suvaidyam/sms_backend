@@ -43,7 +43,7 @@ const getstudent = async (req: any, res: any) => {
       res.status(200).json({ message: "Success", oneStudent: students });
       
     } else {
-      const students = await StudentModel.find({});
+      const students = await StudentModel.find({}).populate("studetuserid",{studetuserid:1});
       res.status(200).json({ message: "Success", students: students });
     }
 
